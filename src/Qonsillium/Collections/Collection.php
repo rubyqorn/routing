@@ -28,6 +28,23 @@ abstract class Collection
     public function __construct(array $parametersCollection)
     {
         $this->collection = $parametersCollection;
+        $this->retrieveData();
+    }
+
+        /**
+     * Retrive data from passed array in pack
+     * in units which brings in collection list
+     * @return void
+     */ 
+    protected function retrieveData()
+    {
+        $this->collectionList = new CollectionUnitList();
+
+        foreach($this->collection as $unitKey => $unitParameter) {
+            $this->collectionList->addCollectionUnit(
+                new CollectionUnit($unitKey, $unitParameter)
+            );
+        }
     }
 
     /**
