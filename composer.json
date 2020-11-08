@@ -1,0 +1,18 @@
+{
+    "name": "qonsillium/routing",
+    "description": "Fast and flexible routing library",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Anton Hideger",
+            "email": "rubyqorn@example.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Qonsillium\\": "src/Qonsillium/"
+        }
+    },
+    "require": {}
+}
