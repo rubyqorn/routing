@@ -8,7 +8,7 @@ class CollectionUnitList
      * Collection of CollectionUnit classes
      * @var array 
      */ 
-    protected array $units;
+    protected array $units = [];
 
     /**
      * Add new unit in collection 
@@ -29,5 +29,15 @@ class CollectionUnitList
     public function getUnitByKey(string $unitKey): CollectionUnit
     {
         return $this->units[$unitKey];
+    }
+
+    /**
+     * Return array with created collection
+     * units
+     * @return array 
+     */ 
+    public function getUnitsList(): array
+    {
+        return $this->units;
     }
 }
