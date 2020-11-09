@@ -160,4 +160,21 @@ class RequestFacade
         $collection = new HeadersCollection($this->headersParameters);
         return $collection->getCollection();
     }
+
+    /**
+     * Return list of created collection units
+     * @param \Qonsillium\Collections\CollectionUnitList
+     * @throws \Exception
+     * @return array 
+     */ 
+    protected function getUnitsList(CollectionUnitList $collection): array
+    {
+        $list = $collection->getUnitsList();
+
+        if (!$list) {
+            return [];
+        }
+
+        return $list;
+    }
 }
