@@ -2,6 +2,9 @@
 
 namespace Qonsillium;
 
+use Qonsillium\Collections\BodyStream;
+use Qonsillium\Collections\BodyParsedStream;
+
 class Request extends RequestFacade
 {
     /**
@@ -24,8 +27,7 @@ class Request extends RequestFacade
             $_SERVER,
             $_COOKIE,
             $_FILES,
-            [],
-            []
+            getallheaders()
         );
     }
 
@@ -109,13 +111,40 @@ class Request extends RequestFacade
         return $this->parameters;
     }
 
+    /**
+     * Return list of HTTP headers  
+     * @return array
+     */ 
     public function headers(): array 
     {
-        //TODO: Not implemented yet
+        $list = $this->getUnitsList($this->requestHeadersParameters());
+
+        foreach($list as $unit) {
+            $this->parameters[$unit->getUnitKey()] = $unit->getUnitParameter(); 
+        }
+
+        return $this->parameters;
     }
 
-    public function body(): array
+    /**
+     * Return list of body parameters in array
+     * format. Also realized string format, but
+     * doesn't exists in this class
+     * 
+     * \Qonstillium\Collections\BodyStream - string format
+     * \Qonstillium\Collections\BodyParsedStream - array format
+     * 
+     *  @return array
+     */ 
+    public function bodyInArrayFormat(): array
     {
-        //TODO: Not implemented yet
+        $body = new BodyParsedStream();
+        $list = $this->getUnitsList($this->requestBodyParameters($body));
+
+        foreach($list as $unit) {
+            $this->parameters[$unit->getUnitKey()] = $unit->getUnitParameter(); 
+        }
+
+        return $this->parameters;
     }
 }
