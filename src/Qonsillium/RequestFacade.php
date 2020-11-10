@@ -2,6 +2,8 @@
 
 namespace Qonsillium;
 
+
+use Qonsillium\Collections\Body;
 use Qonsillium\Collections\BodyCollection;
 use Qonsillium\Collections\CollectionUnitList;
 use Qonsillium\Collections\FilesCollection;
@@ -48,12 +50,6 @@ class RequestFacade
     protected array $filesParameters;
 
     /**
-     * Parameters from HTTP body
-     * @var array 
-     */
-    protected array $bodyParameters;
-
-    /**
      * Parameters from HTTP headers 
      * @var array 
      */
@@ -69,7 +65,6 @@ class RequestFacade
      * @param array $server
      * @param array $cookie,
      * @param array $files,
-     * @param array $body 
      * @param array $headers
      * @return void 
      */ 
@@ -79,7 +74,6 @@ class RequestFacade
         array $server,
         array $cookie,
         array $files,
-        array $body, 
         array $headers
     ){
         $this->getParameters = $get;
@@ -87,7 +81,6 @@ class RequestFacade
         $this->serverParameters = $server;
         $this->cookieParameters = $cookie;
         $this->filesParameters = $files;
-        $this->bodyParameters = $body;
         $this->headersParameters = $headers;
     }
 
@@ -143,11 +136,12 @@ class RequestFacade
 
     /**
      * Return colletion list of HTTP body parameters
+     * @param \Qonsillium\Collections\Body
      * @return \Qonsillium\Collections\CollectionUnitList  
      */ 
-    public function requestBodyParameters(): CollectionUnitList
+    public function requestBodyParameters(Body $bodyContent): CollectionUnitList
     {
-        $collection = new BodyCollection($this->bodyParameters);
+        $collection = new BodyCollection($bodyContent->getContent());
         return $collection->getCollection();
     }
 
