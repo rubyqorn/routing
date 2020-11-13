@@ -48,6 +48,15 @@ abstract class Collection
     }
 
     /**
+     * Return instance for collection manipulations
+     * @return \Qonsillium\Collections\Collection 
+     */ 
+    public function getInstance(): Collection
+    {
+        return $this;
+    }
+
+    /**
      * Return list of created collections
      * @return \Qonsillium\Collections\CollectionUnitList 
      */ 
