@@ -2,7 +2,6 @@
 
 namespace Qonsillium;
 
-use Qonsillium\Collections\ParametersCollection;
 use Qonsillium\Collections\CollectionUnitList;
 use Qonsillium\Collections\HeadersCollection;
 use Qonsillium\Collections\CookieCollection;
@@ -11,28 +10,19 @@ use Qonsillium\Collections\FilesCollection;
 class ResponseFacade
 {
     /**
-     * List of GET HTTP parameters
-     * @var array 
+     * @var \Qonsillium\Collections\HeadersCollection 
      */ 
-    protected array $getParameters;
+    protected ?HeadersCollection $headersCollection = null;
 
     /**
-     * List of existence cookie 
-     * @var array 
+     * @var \Qonsillium\Collections\CookieCollection 
      */ 
-    protected array $cookieParameters;
+    protected ?CookieCollection $cookieCollection = null;
 
     /**
-     * List of files
-     * @var array 
+     * @var \Qonsillium\Collections\FilesCollection 
      */ 
-    protected array $filesParameters;
-
-    /**
-     * List of HTTP headers
-     * @var array 
-     */ 
-    protected array $headersParameters;
+    protected ?FilesCollection $filesCollection = null;
 
     /**
      * Initiate ResponseFacade costructor method
@@ -41,26 +31,13 @@ class ResponseFacade
      * @return void 
      */ 
     public function __construct(
-        array $get,
         array $cookie,
         array $files,
         array $headers
     ){
-        $this->getParameters = $get;
-        $this->cookieParameters = $cookie;
-        $this->filesParameters = $files;
-        $this->headersParameters = $headers;
-    }
-
-    /**
-     * Return list of GET HTTP parameters from
-     * query string 
-     * @return \Qonsillium\Collections\CollectionUnitList 
-     */ 
-    public function requestGetParameters(): CollectionUnitList
-    {
-        $collection = new ParametersCollection($this->getParameters);
-        return $collection->getCollection();
+        $this->headersCollection = new HeadersCollection($headers);
+        $this->cookieCollection = new CookieCollection($cookie);
+        $this->filesCollection = new FilesCollection($files);
     }
 
     /**
@@ -69,8 +46,7 @@ class ResponseFacade
      */ 
     public function requestCookieParameters(): CollectionUnitList
     {
-        $collection = new CookieCollection($this->cookieParameters);
-        return $collection->getCollection();
+        return $this->cookieCollection->getCollection();
     }
 
     /**
@@ -79,8 +55,7 @@ class ResponseFacade
      */ 
     public function requestFilesParameters(): CollectionUnitList
     {
-        $collection = new FilesCollection($this->filesParameters);
-        return $collection->getCollection();
+        return $this->filesCollection->getCollection();
     }
 
     /**
@@ -89,8 +64,7 @@ class ResponseFacade
      */ 
     public function requestHeadersParameters(): CollectionUnitList
     {
-        $collection = new HeadersCollection($this->headersParameters);
-        return $collection->getCollection();
+        return $this->headersCollection->getCollection();
     }
 
     /**
