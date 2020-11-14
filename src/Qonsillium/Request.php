@@ -5,7 +5,7 @@ namespace Qonsillium;
 use Qonsillium\Collections\BodyStream;
 use Qonsillium\Collections\BodyParsedStream;
 
-class Request extends RequestFacade
+class Request extends RequestFacade implements Communicable
 {
     /**
      * List of parameters with keys 
