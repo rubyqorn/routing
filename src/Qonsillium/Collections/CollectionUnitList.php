@@ -21,6 +21,22 @@ class CollectionUnitList
     }
 
     /**
+     * Delete collection unit by name from list
+     * of collections
+     * @param string $collectionUnitName
+     * @throws \Exception
+     * @return void 
+     */ 
+    public function removeCollectionUnit(string $collectionUnitName)
+    {   
+        if (!isset($this->units[$collectionUnitName])) {
+            throw new \Exception("Collection with {$collectionUnitName} name doesn't exists");
+        }
+
+        unset($this->units[$collectionUnitName]);
+    }
+
+    /**
      * Return unit collection associated with passed
      * unit key 
      * @param string $unitKey
