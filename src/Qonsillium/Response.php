@@ -10,6 +10,18 @@ class Response extends ResponseFacade implements Communicable
      * @var array 
      */ 
     protected array $parameters = [];
+    
+    /**
+     * Default HTTP protocol version
+     * @var string  
+     */ 
+    protected string $protocolVersion = '1.1'; 
+
+    /**
+     * Default HTTP protocol type
+     * @var string 
+     */ 
+    protected string $protocolType = 'HTTP';
 
     /**
      * @var \Qonsillium\HttpStatus 
@@ -65,6 +77,42 @@ class Response extends ResponseFacade implements Communicable
 
         return $this->parameters;
     }
+    
+    /**
+     * Validate existence of HTTP header in
+     * headers list
+     * @param string $headerName
+     * @return \Qonsillium\Collections\CollectionUnit|bool 
+     */ 
+    public function hasHeader(string $headerName)
+    {
+        $headerUnit = $this->getUnitByKey(
+            $this->requestHeadersParameters(), $headerName
+        );
+
+        if (!$headerUnit) {
+            return false;
+        }
+
+        return $headerUnit;
+    }
+
+    /**
+     * Validate existence and return HTTP header value 
+     * by specified parameter
+     * @param string $headerName
+     * @return string
+     */ 
+    public function getHeader(string $headerName)
+    {
+        $header = $this->hasHeader($headerName);
+
+        if (!$header) {
+            return false;
+        }
+
+        return $header->getUnitParameter();
+    }
 
     /**
      * Set new HTTP header in headers list
@@ -85,6 +133,44 @@ class Response extends ResponseFacade implements Communicable
     public function removeHeader(string $headerName)
     {
         return $this->headersCollection->detachHeaderCollection($headerName);
+    }
+
+    /**
+     * Set HTTP protocol version. By default it's 1.1
+     * @param string $version
+     * @return void
+     */ 
+    public function setProtocolVersion(string $version)
+    {
+        $this->protocolVersion = $version;
+    }
+
+    /**
+     * Set HTTP protocol type. By default it's HTTP
+     * @param string $type 
+     * @return void 
+     */ 
+    public function setProtocolType(string $type)
+    {
+        $this->protocolType = $type;
+    }
+
+    /**
+     * Return default HTTP protocol version
+     * @return string  
+     */ 
+    public function getProtocolVersion(): string
+    {
+        return $this->protocolVersion;
+    }
+
+    /**
+     * Return default HTTP protocol type
+     * @return string 
+     */ 
+    public function getProtocolType(): string
+    {
+        return $this->protocolType;
     }
 
     /**
