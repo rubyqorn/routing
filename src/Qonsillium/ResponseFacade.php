@@ -2,6 +2,7 @@
 
 namespace Qonsillium;
 
+use Qonsillium\Collections\CollectionUnit;
 use Qonsillium\Collections\CollectionUnitList;
 use Qonsillium\Collections\HeadersCollection;
 use Qonsillium\Collections\CookieCollection;
@@ -65,6 +66,16 @@ class ResponseFacade
     public function requestHeadersParameters(): CollectionUnitList
     {
         return $this->headersCollection->getCollection();
+    }
+
+    /**
+     * Return specified unit by key value 
+     * @param \Qonsillium\Collections\CollectionUnitList 
+     * @return \Qonsillium\Collections\CollectionUnit
+     */ 
+    protected function getUnitByKey(CollectionUnitList $unitList, string $key): ?CollectionUnit
+    {
+        return $unitList->getUnitByKey($key);
     }
 
     /**
