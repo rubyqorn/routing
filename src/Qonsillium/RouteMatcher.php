@@ -4,13 +4,21 @@ namespace Qonsillium;
 
 class RouteMatcher
 {
-    public function setRoute($route)
+    public function matchMethod(string $specifiedMethod, string $requestMethod): bool
     {
-        //
+        if ($specifiedMethod == $requestMethod) {
+            return true;
+        }
+
+        return false;
     }
 
-    public function getRoute()
+    public function matchPath(string $specifiedPath, string $requestPath): bool
     {
-        //
+        if ($specifiedPath == $requestPath) {
+            return true;
+        }
+
+        return false;
     }
 }
