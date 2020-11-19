@@ -22,7 +22,7 @@ class QonsilliumRouter
      */ 
     public function __construct()
     {
-        $this->serviceProvider = new ServiceProvider(new Request, new Response);
+        $this->serviceProvider = new ServiceProvider();
     }
 
     /**
@@ -31,7 +31,13 @@ class QonsilliumRouter
      */ 
     public function getRequest(): Request
     {
-        return $this->serviceProvider->request();
+        $request = $this->serviceProvider->getService('request');
+
+        if (!$request) {
+            return false;
+        }
+
+        return new $request;
     }
 
     /**
@@ -40,7 +46,24 @@ class QonsilliumRouter
      */ 
     public function getResponse(): Response
     {
-        return $this->serviceProvider->response();
+        $response = $this->serviceProvider->getService('response');
+
+        if (!$response) {
+            return false;
+        }
+
+        return new $response;
+    }
+
+    public function getRoute(): Route
+    {
+        $route = $this->serviceProvider->getService('route');
+
+        if (!$route) {
+            return false;
+        }
+
+        return new $route;
     }
 
     /**
@@ -52,8 +75,7 @@ class QonsilliumRouter
      */ 
     protected function setDefinitions(string $method, string $path, $handler): Route
     {
-        // TODO: Resolve dependencies
-        $route = new Route();
+        $route = $this->getRoute();
         $route->setMethod($method);
         $route->setRoute($path);
         $route->setHandler($handler);
