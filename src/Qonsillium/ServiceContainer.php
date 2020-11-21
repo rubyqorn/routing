@@ -2,6 +2,8 @@
 
 namespace Qonsillium;
 
+use Qonsillium\Parsers\RouteHandlerParser;
+
 abstract class ServiceContainer
 {
     /**
@@ -14,5 +16,6 @@ abstract class ServiceContainer
         'response' => Response::class,
         'route_matcher' => RouteMatcher::class,
         'route_collector' => RouteCollector::class,
+        'route_handler_parser' => RouteHandlerParser::class
     ];
 }

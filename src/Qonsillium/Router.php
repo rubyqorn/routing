@@ -2,6 +2,8 @@
 
 namespace Qonsillium;
 
+use Qonsillium\Parsers\RouteHandlerParser;
+
 abstract class Router
 {
     /**
@@ -13,6 +15,11 @@ abstract class Router
      * @var \Qonsillium\RouteCollector 
      */
     private ?RouteCollector $collector = null;
+
+    /**
+     * @var \Qonsillium\Parsers\RouteHandlerParser 
+     */ 
+    private ?RouteHandlerParser $routeHandlerParser = null;
 
     /**
      * @var \Qonsillium\Request 
@@ -31,6 +38,7 @@ abstract class Router
         $this->matcher = new RouteMatcher();
         $this->collector = new RouteCollector();
         $this->request = new Request();
+        $this->routeHandlerParser = new RouteHandlerParser('@');
     }
 
     /**
@@ -84,10 +92,32 @@ abstract class Router
     }
 
     /**
+     * Validate existence of controller class and its
+     * action name 
+     * @param string $controller 
+     * @param string $action 
+     * @return bool 
+     */ 
+    private function validateControllerHandler(string $controller, string $action)
+    {
+        if (!class_exists($controller)) {
+            return false;
+        }
+
+        $controller = new $controller;
+
+        if (!method_exists($controller, $action)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Compare route path and HTTP method and call
      * specified user handler. While it can be only
      * callback function
-     * @param \Qonsillium\Route
+     * @param \Qonsillium\Route $route
      * @return bool|null 
      */ 
     public function validateAndCallRoute(Route $route)
@@ -103,8 +133,23 @@ abstract class Router
         if (!$this->collector->setRoute($route)) {
             return false;
         }
+
+        if (is_callable($route->getHandler())) {
+            return call_user_func($route->getHandler());
+        }
+
+        if (!is_string($route->getHandler())) {
+            return false;
+        }
+
+        $handler = $this->routeHandlerParser->parse($route->getHandler());
+
+        if (!$handler) {
+            return false;
+        }
+
+        return call_user_func_array([new $handler['controller'], $handler['action']], []);
         
-        call_user_func($route->getHandler());
     }
 
     /**

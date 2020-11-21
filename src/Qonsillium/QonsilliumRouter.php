@@ -2,6 +2,8 @@
 
 namespace Qonsillium;
 
+use Qonsillium\Parsers\RouteHandlerParser;
+
 class QonsilliumRouter
 {
     /**
@@ -16,12 +18,20 @@ class QonsilliumRouter
     protected array $routes = [];
 
     /**
+     * Place where contains HTTP request
+     * handlers. By default it's root dir
+     * @var string  
+     */ 
+    protected string $handlerNamespace;
+
+    /**
      * Initiate QonsilliumRouter contrutor method 
      * and ServiceProvider class 
      * @return void 
      */ 
-    public function __construct()
+    public function __construct(string $namespace = '/')
     {
+        $this->handlerNamespace = $namespace;
         $this->serviceProvider = new ServiceProvider();
     }
 
@@ -53,6 +63,20 @@ class QonsilliumRouter
     {
         $route = $this->serviceProvider->getService('route');
         return new $route;
+    }
+
+    /**
+     * Return parser which parse handler string specified
+     * in route. Parse handler by specific pattern which
+     * will have to be set at this method. This pattern
+     * delimit handler class and its action name 
+     * @param string $pattern
+     * @return \Qonsillium\Parsers\RouteHandlerParser
+     */ 
+    public function getRouteHandlerParser(string $pattern): RouteHandlerParser
+    {
+        $routeHandlerParser = $this->serviceProvider->getService('route_handler_parser');
+        return new $routeHandlerParser($pattern);
     }
 
     /**
