@@ -30,7 +30,7 @@ class RouteMatcher
      */ 
     public function matchPath(string $specifiedPath, string $requestPath): bool
     {
-        if ($specifiedPath == $requestPath) {
+        if (preg_match("#$specifiedPath#", $requestPath)) {
             return true;
         }
 

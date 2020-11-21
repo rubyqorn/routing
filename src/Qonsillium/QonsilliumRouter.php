@@ -32,37 +32,26 @@ class QonsilliumRouter
     public function getRequest(): Request
     {
         $request = $this->serviceProvider->getService('request');
-
-        if (!$request) {
-            return false;
-        }
-
         return new $request;
     }
 
     /**
      * Return HTTP response handler
-     * @return \QOnsillium\Response 
+     * @return \Qonsillium\Response 
      */ 
     public function getResponse(): Response
     {
         $response = $this->serviceProvider->getService('response');
-
-        if (!$response) {
-            return false;
-        }
-
         return new $response;
     }
 
+    /**
+     * Return route handler
+     * @return \Qonsillium\Route 
+     */ 
     public function getRoute(): Route
     {
         $route = $this->serviceProvider->getService('route');
-
-        if (!$route) {
-            return false;
-        }
-
         return new $route;
     }
 
@@ -109,7 +98,7 @@ class QonsilliumRouter
     public function get(string $path, $handler)
     {
         $route = $this->setDefinitions('GET', $path, $handler);
-        
+
         if (!$this->addRoute($route)) {
             return false;
         }
