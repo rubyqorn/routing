@@ -31,7 +31,7 @@ abstract class Collection
         $this->retrieveData();
     }
 
-        /**
+    /**
      * Retrive data from passed array in pack
      * in units which brings in collection list
      * @return void
@@ -48,17 +48,11 @@ abstract class Collection
     }
 
     /**
-     * Return instance for collection manipulations
-     * @return \Qonsillium\Collections\Collection 
-     */ 
-    public function getInstance(): Collection
-    {
-        return $this;
-    }
-
-    /**
      * Return list of created collections
      * @return \Qonsillium\Collections\CollectionUnitList 
      */ 
-    abstract public function getCollection(): CollectionUnitList;
+    public function getCollection(): CollectionUnitList
+    {
+        return $this->collectionList;
+    }
 }
