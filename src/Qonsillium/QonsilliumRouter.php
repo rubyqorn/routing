@@ -29,7 +29,7 @@ class QonsilliumRouter
      * and ServiceProvider class 
      * @return void 
      */ 
-    public function __construct(string $namespace = '/')
+    public function __construct(string $namespace = '\\')
     {
         $this->handlerNamespace = $namespace;
         $this->serviceProvider = new ServiceProvider();
