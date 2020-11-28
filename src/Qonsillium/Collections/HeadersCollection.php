@@ -20,15 +20,6 @@ class HeadersCollection extends Collection
     }
 
     /**
-     * Return collection list with HTTP headers
-     * @return \Qonsillium\Collections\CollectionUnitList 
-     */ 
-    public function getCollection(): CollectionUnitList
-    {
-        return $this->collectionList;
-    }
-
-    /**
      * Set new HTTP header in headers list 
      * @param string $headerName    | Content-type
      * @param string $headerValue   | plain/text
