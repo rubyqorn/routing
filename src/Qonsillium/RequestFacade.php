@@ -3,57 +3,12 @@
 namespace Qonsillium;
 
 
-use Qonsillium\Collections\Body;
-use Qonsillium\Collections\BodyCollection;
+use Qonsillium\Collections\CollectionsFactory;
 use Qonsillium\Collections\CollectionUnitList;
-use Qonsillium\Collections\FilesCollection;
-use Qonsillium\Collections\CookieCollection;
-use Qonsillium\Collections\ServerCollection;
-use Qonsillium\Collections\HeadersCollection;
-use Qonsillium\Collections\ParametersCollection;
 
 class RequestFacade
 {
-    /**
-     * Parameters from $_GET superglobal
-     * array 
-     * @var array 
-     */ 
-    protected array $getParameters;
-
-    /**
-     * Parameters from $_POST superglobal
-     * array 
-     * @var array 
-     */
-    protected array $postParameters;
-
-    /**
-     * Parameters from $_COOKIE superglobal
-     * array 
-     * @var array 
-     */
-    protected array $cookieParameters;
-
-    /**
-     * Parameters from $_SERVER superglobal
-     * array 
-     * @var array 
-     */
-    protected array $serverParameters;
-
-    /**
-     * Parameters from $_FILES superglobal
-     * array 
-     * @var array 
-     */
-    protected array $filesParameters;
-
-    /**
-     * Parameters from HTTP headers 
-     * @var array 
-     */
-    protected array $headersParameters;
+    private ?CollectionsFactory $collectionsFactory;
 
     /**
      * Initiate Request constructor method and
@@ -65,6 +20,7 @@ class RequestFacade
      * @param array $server
      * @param array $cookie,
      * @param array $files,
+     * @param array $body,
      * @param array $headers
      * @return void 
      */ 
@@ -74,14 +30,12 @@ class RequestFacade
         array $server,
         array $cookie,
         array $files,
+        array $body,
         array $headers
     ){
-        $this->getParameters = $get;
-        $this->postParameters = $post;
-        $this->serverParameters = $server;
-        $this->cookieParameters = $cookie;
-        $this->filesParameters = $files;
-        $this->headersParameters = $headers;
+        $this->collectionsFactory = new CollectionsFactory(
+            $get, $post, $cookie, $files, $headers, $body, $server
+        );
     }
 
     /**
@@ -90,8 +44,7 @@ class RequestFacade
      */ 
     public function requestGetParameters(): CollectionUnitList
     {
-        $collection = new ParametersCollection($this->getParameters);
-        return $collection->getCollection();
+        return $this->collectionsFactory->getGetParametersCollection()->getCollection();
     }
 
     /**
@@ -100,8 +53,7 @@ class RequestFacade
      */ 
     public function requestPostParameters(): CollectionUnitList
     {
-        $collection = new ParametersCollection($this->postParameters);
-        return $collection->getCollection();
+        return $this->collectionsFactory->getPostParametersCollection()->getCollection();
     }
 
     /**
@@ -110,8 +62,7 @@ class RequestFacade
      */ 
     public function requestServerParameters(): CollectionUnitList
     {
-        $collection = new ServerCollection($this->serverParameters);
-        return $collection->getCollection();
+        return $this->collectionsFactory->getServerParametersCollection()->getCollection();
     }
     
     /**
@@ -120,8 +71,7 @@ class RequestFacade
      */ 
     public function requestCookieParameters(): CollectionUnitList
     {
-        $collection = new CookieCollection($this->cookieParameters);
-        return $collection->getCollection();
+        return $this->collectionsFactory->getCookieParametersCollection()->getCollection();
     }
 
     /**
@@ -130,19 +80,16 @@ class RequestFacade
      */ 
     public function requestFilesParameters(): CollectionUnitList
     {
-        $collection = new FilesCollection($this->filesParameters);
-        return $collection->getCollection();
+        return $this->collectionsFactory->getFilesParametersCollection()->getCollection();
     }
 
     /**
      * Return colletion list of HTTP body parameters
-     * @param \Qonsillium\Collections\Body
      * @return \Qonsillium\Collections\CollectionUnitList  
      */ 
-    public function requestBodyParameters(Body $bodyContent): CollectionUnitList
+    public function requestBodyParameters(): CollectionUnitList
     {
-        $collection = new BodyCollection($bodyContent->getContent());
-        return $collection->getCollection();
+        return $this->collectionsFactory->getBodyParametersCollection()->getCollection();
     }
 
     /**
@@ -151,14 +98,12 @@ class RequestFacade
      */ 
     public function requestHeadersParameters(): CollectionUnitList
     {
-        $collection = new HeadersCollection($this->headersParameters);
-        return $collection->getCollection();
+        return $this->collectionsFactory->getHeadersParametersCollection()->getCollection();
     }
 
     /**
      * Return list of created collection units
      * @param \Qonsillium\Collections\CollectionUnitList
-     * @throws \Exception
      * @return array 
      */ 
     protected function getUnitsList(CollectionUnitList $collection): array

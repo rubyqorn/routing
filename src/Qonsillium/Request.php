@@ -21,12 +21,15 @@ class Request extends RequestFacade implements Communicable
      */ 
     public function __construct() 
     {
+        $body = new BodyParsedStream();
+
         parent::__construct(
             $_GET,
             $_POST,
             $_SERVER,
             $_COOKIE,
             $_FILES,
+            $body->getContent(),
             getallheaders()
         );
     }

@@ -2,28 +2,16 @@
 
 namespace Qonsillium;
 
-use Qonsillium\Collections\CollectionUnit;
+use Qonsillium\Collections\CollectionsFactory;
 use Qonsillium\Collections\CollectionUnitList;
-use Qonsillium\Collections\HeadersCollection;
-use Qonsillium\Collections\CookieCollection;
-use Qonsillium\Collections\FilesCollection;
+use Qonsillium\Collections\CollectionUnit;
 
 class ResponseFacade
 {
     /**
-     * @var \Qonsillium\Collections\HeadersCollection 
+     * @var \Qonsillium\Collections\CollectionsFactory 
      */ 
-    protected ?HeadersCollection $headersCollection = null;
-
-    /**
-     * @var \Qonsillium\Collections\CookieCollection 
-     */ 
-    protected ?CookieCollection $cookieCollection = null;
-
-    /**
-     * @var \Qonsillium\Collections\FilesCollection 
-     */ 
-    protected ?FilesCollection $filesCollection = null;
+    private ?CollectionsFactory $collectionFactory;
 
     /**
      * Initiate ResponseFacade costructor method
@@ -36,9 +24,11 @@ class ResponseFacade
         array $files,
         array $headers
     ){
-        $this->headersCollection = new HeadersCollection($headers);
-        $this->cookieCollection = new CookieCollection($cookie);
-        $this->filesCollection = new FilesCollection($files);
+        //Restricted access for GET, POST, HTTP body, server
+        // parameters 
+        $this->collectionFactory = new CollectionsFactory(
+            [], [], $cookie, $files, $headers, [], []
+        );
     }
 
     /**
@@ -47,7 +37,7 @@ class ResponseFacade
      */ 
     public function requestCookieParameters(): CollectionUnitList
     {
-        return $this->cookieCollection->getCollection();
+        return $this->collectionFactory->getCookieParametersCollection()->getCollection();
     }
 
     /**
@@ -56,7 +46,7 @@ class ResponseFacade
      */ 
     public function requestFilesParameters(): CollectionUnitList
     {
-        return $this->filesCollection->getCollection();
+        return $this->collectionFactory->getFilesParametersCollection()->getCollection();
     }
 
     /**
@@ -65,7 +55,7 @@ class ResponseFacade
      */ 
     public function requestHeadersParameters(): CollectionUnitList
     {
-        return $this->headersCollection->getCollection();
+        return $this->collectionFactory->getHeadersParametersCollection()->getCollection();
     }
 
     /**
